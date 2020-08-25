@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="ExemploHeranca:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/ExemploHeranca_jar</output-path>
+    <root id="archive" name="ExemploHeranca.jar">
+      <element id="module-output" name="ExemploHeranca" />
+    </root>
+  </artifact>
+</component>
