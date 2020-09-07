@@ -4,94 +4,126 @@ package Estoqueroupas.roupasConsole.DAO;
 import Estoqueroupas.roupasConsole.Models.Roupa;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RoupaDAO  {
+public class RoupaDAO {
 
-    File arquivo = new File("CRUDRoupas.txt");
-    List<Roupa> objetos;
+
+
+    String caminho = "CRUDRoupas.txt";
+
+    File arquivo;
+
+    List<String> roupas = new ArrayList<String>();
 
    public void ValidaDadosInseridos(int codigo) throws IOException{
 
        try {
 
-           /* Roupa roupa = (Roupa) is.readObject();*/
+           roupas = LerRoupasDoArquivo(arquivo);
+           String  codItem = "";
 
-          /* List<Integer> listaCodigos = new ArrayList<Integer>();*/
-           objetos = LerObjetosDoArquivo(arquivo);
-
-           for (Roupa obj: objetos) {
-               if(obj.getCodigoItem() == codigo)
-               {
+           for (String r: roupas) {
+               String [] leitor = r.split(":");
+               codItem = leitor[1];
+               if(String.valueOf(codigo) == codItem.trim()){
                    System.out.println("Código do item já existe!");
-                   return;
                }
 
            }
 
-          /*
-           listaCodigos.add(roupa.getCodigoItem());
-
-           for (int codigo: listaCodigos) {
-               if(r.getCodigoItem() == codigo){
-                   System.out.println("Código do item já existe!");
-                   is.close();
-               }
-
-           }*/
        }
        catch (ClassNotFoundException err){
            System.out.printf("Erro: %s", err.getMessage());
        }
    }
-   private void ValidaArquivo(){
-       if(!arquivo.exists()){
+   private void ValidaArquivo() throws FileNotFoundException {
+       if(arquivo == null){
            System.out.println("Nenhuma roupa cadastrada!");
            return;
        }
    }
-    private static List<Roupa> LerObjetosDoArquivo(File arquivo) throws IOException, ClassNotFoundException {
-        List<Roupa> objetos = new ArrayList();
-        InputStream is = null;
-        try {
-            is = new FileInputStream(arquivo);
-            ObjectInputStream ois = new ObjectInputStream(is);
-            while (true) {
-                try {
-                    Roupa roupa = (Roupa) ois.readObject();
-                    objetos.add(roupa);
+    private static List<String> LerRoupasDoArquivo(File arquivo) throws IOException, ClassNotFoundException {
+       /* ArrayList<String> linhas =  new ArrayList<String>() ;*/
+        List<String> roupas = new ArrayList<String>();
+        BufferedReader br = new BufferedReader(new FileReader(arquivo));
+        String linha;
+        String linhas = "";
+        while( (linha = br.readLine()) != null){
 
-                } catch (EOFException ex) {
-                    break;
-                }
-            }
-        } finally {
-            if (is != null) {
-                is.close();
-            }
+            linhas = String.join(linha);
+
         }
-        return objetos;
+        String [] roupa = linhas.split("_") ;
+
+        for(String r : roupa){
+            roupas.add(r);
+        }
+
+        br.close();
+        return roupas;
     }
 
+    private static void DeletarRoupaDoArquivo(File arquivo,String r) throws IOException {
+        List<String> salvar = new ArrayList<String>();
+        BufferedReader br = new BufferedReader(new FileReader(arquivo));
+        String linha = br.readLine();
+        String linhas = "";
+        while( (linha != null)){
+
+           linhas = String.join(linha);
+
+        }
+        String[] arq = linhas.split("_");
+        for(String a : arq){
+            if(a.trim().equals(r.trim()) == false){
+                salvar.add(a);
+            }
+
+        }
+        br.close();
+        FileWriter fw = new FileWriter(arquivo);
+        BufferedWriter bw = new BufferedWriter(fw);
+        for(int i = 0 ; i < salvar.size();i++){
+            bw.write(salvar.get(i));
+            bw.newLine();
+        }
+        bw.close();
+        fw.close();
 
 
-    public void InsereDados(Roupa roupa,int codigo) throws IOException {
+
+    }
+
+    public void InsereDados(Roupa roupa,int codigo) throws IOException, FileNotFoundException {
 
         try {
 
-            /* FileWriter fw = new FileWriter(arquivo,true);*/
-            ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(arquivo, true));
 
-
-            if (!arquivo.exists())
-                arquivo.createNewFile();
+            arquivo = new File(caminho);
+            FileWriter fw = new FileWriter(arquivo.getAbsoluteFile(),true);
+            BufferedWriter bw = new BufferedWriter(fw);
 
             ValidaDadosInseridos(codigo);
 
-            os.flush();
-            os.writeObject(roupa);
-            os.close();
+            bw.write("Código do item:" + String.valueOf(roupa.getCodigoItem()) + "\n");
+            bw.write(":Data da entrega do item:" + String.valueOf(roupa.getDataEntrega()) + "\n");
+            bw.write(":Local da compra do item:" + roupa.getLocalCompra() + "\n");
+            bw.write(":Tipo do item:" + roupa.getTipo() + "\n");
+            bw.write(":Marca do item:" + roupa.getMarca() + "\n");
+            bw.write(":Características do item:" + roupa.getCaracteristicas() + "\n");
+            bw.write(":Cor do item:" + String.valueOf(roupa.getCor()) + "\n");
+            bw.write(":Tamanho do item:" + String.valueOf(roupa.getTamanho()) + "\n");
+            bw.write(":Valor da etiqueta do item:" + String.valueOf(roupa.getValorEtiqueta()) +"\n");
+            bw.write(":Valor de compra do item:" + String.valueOf(roupa.getValorCompra()) + "\n");
+            bw.write(":Valor margem do item:" + String.valueOf(roupa.getValorMargem()) + "\n");
+            bw.write(":Preço sugerido do item:" + String.valueOf(roupa.getPrecoSugerido()) + "\n");
+            bw.write("_");
+            bw.close();
+
+
         }
         catch (IOException erro){
             System.out.printf("Erro: %s", erro.getMessage());
@@ -101,42 +133,31 @@ public class RoupaDAO  {
 
     }
 
-    public Roupa EditaDados(int codigo) throws IOException {
+    public void EditaDados(int codigo) throws IOException {
 
        try {
            try {
 
                ValidaArquivo();
 
-              /* FileInputStream fs = new FileInputStream(arquivo);*/
-              /* ObjectInputStream is = new ObjectInputStream(fs);*/
-               ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(arquivo));
+                roupas = LerRoupasDoArquivo(arquivo);
+                String  codItem = "";
 
+               for (String r: roupas) {
 
-                objetos = LerObjetosDoArquivo(arquivo);
-              /* Roupa roupa = (Roupa) is.readObject();
-               List<Integer> listaCodigos = new ArrayList<Integer>();*/
-               for (Roupa obj: objetos) {
-                   if(codigo == obj.getCodigoItem())
-                   {
-                      objetos.remove(obj);
-                      return obj;
+                       String [] leitor = r.split(":");
+                       codItem = leitor[1];
+                       if(String.valueOf(codigo) == codItem.trim()){
+                           DeletarRoupaDoArquivo(arquivo,r);
 
-                   }
-                   else {
+                       }
+                       else {
                        System.out.println("Item não encontrado no estoque!");
 
-                   }
+                       }
 
                }
-               objetos = LerObjetosDoArquivo(arquivo);
-               /*listaCodigos.add(roupa.getCodigoItem());
-               for(int cod: listaCodigos){
-                   if(codigo == cod){
 
-
-                   }
-               }*/
            }
            catch (ClassNotFoundException err){
                System.out.printf("Erro: %s", err.getMessage());
@@ -146,7 +167,6 @@ public class RoupaDAO  {
            System.out.printf("Erro: %s", erro.getMessage());
        }
 
-       return new Roupa();
 
 
     }
@@ -156,22 +176,20 @@ public class RoupaDAO  {
         try {
 
             ValidaArquivo();
-            objetos = LerObjetosDoArquivo(arquivo);
-            ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(arquivo));
-            for (Roupa obj: objetos) {
-                if(codigo == obj.getCodigoItem())
-                {
-
-                    objetos.remove(obj);
+            roupas = LerRoupasDoArquivo(arquivo);
+            String codItem = "";
+            for (String r: roupas) {
+                String [] leitor = r.split(":");
+                codItem = leitor[1];
+                if(String.valueOf(codigo) == codItem.trim()){
+                    DeletarRoupaDoArquivo(arquivo,r);
 
                 }
                 else {
                     System.out.println("Item não encontrado no estoque!");
-
                 }
 
             }
-            objetos = LerObjetosDoArquivo(arquivo);
 
         } catch (IOException e) {
             System.out.printf("Erro: %s", e.getMessage());

@@ -1,5 +1,7 @@
 package Estoqueroupas.roupasConsole.Models;
 
+
+import java.io.Serializable;
 import java.util.Date;
 
 public class Roupa {
@@ -16,6 +18,7 @@ public class Roupa {
     private double valorCompra;
     private double valorMargem;
     private double precoSugerido;
+
 
     public void setCodigoItem(int codigoItem) {
         this.codigoItem = codigoItem;

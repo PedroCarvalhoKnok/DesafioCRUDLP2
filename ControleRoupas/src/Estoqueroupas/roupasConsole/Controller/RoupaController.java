@@ -5,7 +5,7 @@ import Estoqueroupas.roupasConsole.Models.Roupa;
 
 import java.io.IOException;
 
-public class RoupaController extends Roupa {
+public class RoupaController  {
 
    public void InsereDados(Roupa roupa,int codigo) throws IOException {
       RoupaDAO DAO = new RoupaDAO();
@@ -13,9 +13,9 @@ public class RoupaController extends Roupa {
 
    }
 
-   public Roupa EditaDados(int codigo) throws IOException{
+   public void EditaDados(int codigo) throws IOException{
       RoupaDAO DAO = new RoupaDAO();
-          return DAO.EditaDados(codigo);
+           DAO.EditaDados(codigo);
 
 
    }
