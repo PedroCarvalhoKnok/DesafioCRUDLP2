@@ -14,12 +14,12 @@ public class RoupaDAO {
 
     String caminho = "CRUDRoupas.txt";
 
-    File arquivo;
+    File arquivo = new File(caminho);;
 
     List<String> roupas = new ArrayList<String>();
 
    public void ValidaDadosInseridos(int codigo) throws IOException{
-
+    /*Esse metodo valida  se existe o mesmo codigo cadastrado antes de inserir*/
        try {
 
            roupas = LerRoupasDoArquivo(arquivo);
@@ -40,13 +40,15 @@ public class RoupaDAO {
        }
    }
    private void ValidaArquivo() throws FileNotFoundException {
+       /*Valida se o arquivo existe antes de editar ou excluir um item*/
+
        if(arquivo == null){
            System.out.println("Nenhuma roupa cadastrada!");
            return;
        }
    }
     private static List<String> LerRoupasDoArquivo(File arquivo) throws IOException, ClassNotFoundException {
-       /* ArrayList<String> linhas =  new ArrayList<String>() ;*/
+       /*Faz as leituras das roupas inseridas no arquivo*/
         List<String> roupas = new ArrayList<String>();
         BufferedReader br = new BufferedReader(new FileReader(arquivo));
         String linha;
@@ -67,6 +69,7 @@ public class RoupaDAO {
     }
 
     private static void DeletarRoupaDoArquivo(File arquivo,String r) throws IOException {
+       /*Deleta roupas do arquivo*/
         List<String> salvar = new ArrayList<String>();
         BufferedReader br = new BufferedReader(new FileReader(arquivo));
         String linha = br.readLine();
@@ -102,7 +105,6 @@ public class RoupaDAO {
         try {
 
 
-            arquivo = new File(caminho);
             FileWriter fw = new FileWriter(arquivo.getAbsoluteFile(),true);
             BufferedWriter bw = new BufferedWriter(fw);
 
@@ -128,6 +130,7 @@ public class RoupaDAO {
         catch (IOException erro){
             System.out.printf("Erro: %s", erro.getMessage());
         }
+
 
 
 
@@ -171,25 +174,24 @@ public class RoupaDAO {
 
     }
 
-    public void ExcluiDados(int codigo) {
+    public void ExcluiDados(int codigo) throws IOException {
 
         try {
 
-            ValidaArquivo();
-            roupas = LerRoupasDoArquivo(arquivo);
-            String codItem = "";
-            for (String r: roupas) {
-                String [] leitor = r.split(":");
-                codItem = leitor[1];
-                if(String.valueOf(codigo) == codItem.trim()){
-                    DeletarRoupaDoArquivo(arquivo,r);
+                ValidaArquivo();
+                roupas = LerRoupasDoArquivo(arquivo);
+                String codItem = "";
+                for (String r : roupas) {
+                    String[] leitor = r.split(":");
+                    codItem = leitor[1];
+                    if (String.valueOf(codigo) == codItem.trim()) {
+                        DeletarRoupaDoArquivo(arquivo, r);
+
+                    } else {
+                        System.out.println("Item não encontrado no estoque!");
+                    }
 
                 }
-                else {
-                    System.out.println("Item não encontrado no estoque!");
-                }
-
-            }
 
         } catch (IOException e) {
             System.out.printf("Erro: %s", e.getMessage());

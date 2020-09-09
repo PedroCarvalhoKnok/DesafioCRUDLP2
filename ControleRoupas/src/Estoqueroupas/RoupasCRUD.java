@@ -41,14 +41,14 @@ public class RoupasCRUD {
             r.setCaracteristicas(caracteristicas);
             System.out.println("Digite a cor do item(inteiro)");
             for (EnumroupasConsoleCorPeca cor : EnumroupasConsoleCorPeca.values()) {
-                System.out.printf(cor.toString(), cor.getCodigo());
+                System.out.printf(cor.toString()+ ","+ cor.getCodigo());
 
             }
             int cor = sc.nextInt();
             r.setCor(cor);
             System.out.println("Digite o tamanho do item(inteiro)");
             for (EnumroupasConsoleTamanho tamanho : EnumroupasConsoleTamanho.values()) {
-                System.out.printf(tamanho.toString(), tamanho.getCodigo());
+                System.out.printf(tamanho.toString()+"," + tamanho.getCodigo());
 
             }
             int tamanho = sc.nextInt();
@@ -73,61 +73,76 @@ public class RoupasCRUD {
 
 
     public static void main(String[] args) throws ParseException, IOException {
+        /*
+          Autores: Pedro Knok, Milena Barbosa
+          RAs: 081180028, 081180026
+        */
+
+        try {
 
 
-        Scanner sc = new Scanner(System.in);
-        RoupaController rc = new RoupaController();
-        Roupa roupa = new Roupa();
-        int codigo = 0;
-        int codigoItem = 0;
+            Scanner sc = new Scanner(System.in);
+            RoupaController rc = new RoupaController();
+            Roupa roupa = new Roupa();
+            int codigo = 0;
+            int codigoItem = 0;
 
-        while (codigo != 4) {
+            while (codigo != 4) {
 
-            System.out.println("Bem vindo ao sistema de Cadastro de roupas!");
-            System.out.println("Digite o que deseja fazer");
-            System.out.println("1 - Cadastrar Roupa");
-            System.out.println("2 - Editar Roupa");
-            System.out.println("3 - Excluir Roupa");
-            System.out.println("4 - Sair");
+                System.out.println("Bem vindo ao sistema de Cadastro de roupas!");
+                System.out.println("Digite o que deseja fazer");
+                System.out.println("1 - Cadastrar Roupa");
+                System.out.println("2 - Editar Roupa");
+                System.out.println("3 - Excluir Roupa");
+                System.out.println("4 - Sair");
 
-            codigo = sc.nextInt();
-
-
-            switch (codigo) {
-                case 1:
-                    MontaMenu(roupa);
-                    rc.InsereDados(roupa, roupa.getCodigoItem());
-
-                    System.out.println("Roupa cadastrada com sucesso!");
-                    codigo = 0;
-                    break;
-
-                case 2:
-                    Roupa r = new Roupa();
-                    System.out.println("Digite o código do item que quer editar");
-                    codigoItem = sc.nextInt();
-                    rc.EditaDados(codigoItem);
-                    MontaMenu(r);
-                    rc.InsereDados(r, r.getCodigoItem());
+                codigo = sc.nextInt();
 
 
-                    System.out.println("Roupa editada com sucesso!");
-                    codigo = 0;
-                    codigoItem = 0;
-                    break;
+                switch (codigo) {
+                    case 1:
+                        MontaMenu(roupa);
+                        rc.InsereDados(roupa, roupa.getCodigoItem());
 
-                case 3:
-                    System.out.println("Digite o código do item que quer deletar");
-                    codigoItem = sc.nextInt();
-                    rc.ExcluiDados(codigoItem);
+                        System.out.println("Roupa cadastrada com sucesso!");
+                        codigo = 0;
+                        break;
 
-                    System.out.println("Roupa deletada com sucesso!");
-                    codigo = 0;
-                    codigoItem = 0;
-                    break;
+                    case 2:
+                        Roupa r = new Roupa();
+                        System.out.println("Digite o código do item que quer editar");
+                        codigoItem = sc.nextInt();
+                        rc.EditaDados(codigoItem);
+                        MontaMenu(r);
+                        rc.InsereDados(r, r.getCodigoItem());
 
+
+                        System.out.println("Roupa editada com sucesso!");
+                        codigo = 0;
+                        codigoItem = 0;
+                        break;
+
+                    case 3:
+                        System.out.println("Digite o código do item que quer deletar");
+                        codigoItem = sc.nextInt();
+                        rc.ExcluiDados(codigoItem);
+
+                        System.out.println("Roupa deletada com sucesso!");
+                        codigo = 0;
+                        codigoItem = 0;
+                        break;
+
+                    default:
+                        System.out.println("Digite os valores do menu");
+                        break;
+
+                }
             }
         }
+        catch (Exception erro){
+            System.out.printf("Erro %s",erro.getMessage());
+        }
+
 
 
     }

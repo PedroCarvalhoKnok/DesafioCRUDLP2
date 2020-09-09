@@ -8,21 +8,38 @@ import java.io.IOException;
 public class RoupaController  {
 
    public void InsereDados(Roupa roupa,int codigo) throws IOException {
-      RoupaDAO DAO = new RoupaDAO();
-      DAO.InsereDados(roupa,codigo);
+      try {
+         RoupaDAO DAO = new RoupaDAO();
+         DAO.InsereDados(roupa, codigo);
+      }
+      catch (Exception erro){
+
+         System.out.printf("Ocorreu um erro %s", erro.getMessage());
+
+      }
 
    }
 
    public void EditaDados(int codigo) throws IOException{
-      RoupaDAO DAO = new RoupaDAO();
-           DAO.EditaDados(codigo);
+      try {
+         RoupaDAO DAO = new RoupaDAO();
+         DAO.EditaDados(codigo);
+      }
+      catch (Exception erro){
+         System.out.printf("Ocorreu um erro %s",erro.getMessage());
+      }
 
 
    }
 
    public void ExcluiDados(int codigo) throws IOException{
-      RoupaDAO DAO = new RoupaDAO();
+      try {
+         RoupaDAO DAO = new RoupaDAO();
          DAO.ExcluiDados(codigo);
+      }
+      catch (Exception erro){
+         System.out.printf("Ocorreu um erro %s",erro.getMessage());
+      }
 
 
    }
